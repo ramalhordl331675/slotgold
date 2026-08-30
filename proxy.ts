@@ -1,0 +1,10 @@
+import { createSession } from "@/lib/supabase/middleware";
+import { type NextRequest } from "next/server";
+
+export async function proxy(request: NextRequest) {
+  return await createSession(request);
+}
+
+export const config = {
+  matcher: ["/admin/:path*"],
+};
