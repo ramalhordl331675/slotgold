@@ -322,9 +322,131 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        <section id="contato" className="py-16 sm:py-24 lg:py-32 bg-bg-secondary" aria-labelledby="contact-title">
+          <div className="container-page">
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <h2 id="contact-title" className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                <span className="text-gradient-gold">Contato</span> & Suporte
+              </h2>
+              <p className="mt-4 text-lg text-text-secondary">
+                Estamos aqui para ajudar. Escolha a melhor forma de entrar em contato conosco.
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
+              <article className="card-premium p-8 text-center">
+                <div className="mx-auto w-14 h-14 rounded-xl bg-gold-primary/10 flex items-center justify-center mb-4">
+                  <svg className="w-7 h-7 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">E-mail para Parcerias e Imprensa</h3>
+                <p className="text-text-secondary text-sm mb-6">
+                  Para parcerias comerciais, imprensa ou sugestões de plataformas:
+                </p>
+                <div className="p-4 rounded-lg bg-bg-primary border border-border-subtle text-center">
+                  <code className="text-sm text-text-secondary font-mono">contato@slotgold.com</code>
+                  <p className="mt-2 text-xs text-text-muted">
+                    Endereço configurável — substitua pelo e-mail oficial do projeto
+                  </p>
+                </div>
+              </article>
+
+              <article className="card-premium p-8 text-center">
+                <div className="mx-auto w-14 h-14 rounded-xl bg-gold-primary/10 flex items-center justify-center mb-4">
+                  <svg className="w-7 h-7 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Dúvidas sobre Plataformas</h3>
+                <p className="text-text-secondary text-sm mb-6">
+                  Para dúvidas sobre avaliações, metodologia ou correções de informações:
+                </p>
+                <a href="mailto:contato@slotgold.com?subject=Dúvida sobre plataforma" className="btn-gold w-full">
+                  Enviar mensagem
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </a>
+              </article>
+            </div>
+
+            <div className="mt-16 max-w-3xl mx-auto">
+              <div className="card-premium p-6 sm:p-8">
+                <h3 className="text-xl font-semibold text-white mb-4 text-center">Jogo Responsável — Recursos de Apoio</h3>
+                <p className="text-text-secondary text-sm mb-6 text-center">
+                  Se você ou alguém que conhece está enfrentando dificuldades com jogos de azar, estes recursos gratuitos e confidenciais podem ajudar:
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <a
+                    href="https://www.jogadoresanonimos.org.br"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-premium p-4 hover:border-gold-primary transition-colors text-center group"
+                  >
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <svg className="w-5 h-5 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      <span className="font-medium text-white group-hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</span>
+                    </div>
+                    <p className="text-xs text-text-secondary">Grupos de apoio, literatura e reuniões presenciais/online em todo o Brasil.</p>
+                  </a>
+
+                  <a
+                    href="https://www.cvl.org.br"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-premium p-4 hover:border-gold-primary transition-colors text-center group"
+                  >
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <svg className="w-5 h-5 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      <span className="font-medium text-white group-hover:text-gold-primary transition-colors">CVV — Centro de Valorização da Vida</span>
+                    </div>
+                    <p className="text-xs text-text-secondary">Apoio emocional 24h, gratuito e sigiloso. Ligue <strong>188</strong> ou acesse o chat online.</p>
+                  </a>
+
+                  <a
+                    href="https://www.jogadoresanonimos.org.br/ferramentas"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-premium p-4 hover:border-gold-primary transition-colors text-center group"
+                  >
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <svg className="w-5 h-5 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="font-medium text-white group-hover:text-gold-primary transition-colors">Limites de Depósito</span>
+                    </div>
+                    <p className="text-xs text-text-secondary">Ferramentas para definir limites de depósito, tempo e autoexclusão nas plataformas.</p>
+                  </a>
+
+                  <a
+                    href="https://www.ibeja.org.br/autoexclusao"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-premium p-4 hover:border-gold-primary transition-colors text-center group"
+                  >
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <svg className="w-5 h-5 star-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <span className="font-medium text-white group-hover:text-gold-primary transition-colors">Autoexclusão</span>
+                    </div>
+                    <p className="text-xs text-text-secondary">Informações sobre programas de autoexclusão e bloqueio de acesso a sites de apostas.</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
-      <footer id="contato" className="bg-bg-secondary border-t border-border-subtle" role="contentinfo">
+      <footer className="bg-bg-secondary border-t border-border-subtle" role="contentinfo">
         <div className="container-page py-12 sm:py-16 lg:py-20">
           <div className="grid gap-8 sm:gap-12 lg:grid-cols-4">
             <div className="lg:col-span-2">
@@ -348,8 +470,8 @@ export default async function Home() {
               <ul className="space-y-2 text-sm text-text-secondary">
                 <li><a href="https://www.jogadoresanonimos.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
                 <li><a href="https://www.cvl.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
-                <li><a href="#" className="hover:text-gold-primary transition-colors">Definir limites de depósito</a></li>
-                <li><a href="#" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
+                <li><a href="https://www.jogadoresanonimos.org.br/ferramentas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
+                <li><a href="https://www.ibeja.org.br/autoexclusao" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
               </ul>
             </div>
 
@@ -373,13 +495,13 @@ export default async function Home() {
                 Proibido para menores de 18 anos. Jogue com responsabilidade.
               </p>
               <div className="flex items-center gap-4">
-                <a href="#" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="Twitter">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="Twitter / X">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" /></svg>
                 </a>
-                <a href="#" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="Instagram">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="Instagram">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
                 </a>
-                <a href="#" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="LinkedIn">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-gold-primary transition-colors" aria-label="LinkedIn">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
                 </a>
               </div>
