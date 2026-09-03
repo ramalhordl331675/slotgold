@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, FormEvent, ChangeEvent } from "react";
-import { createPlatform, listPlatforms, deletePlatform } from "./actions";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import { createPlatform, listPlatforms, deletePlatform, updatePlatform, uploadLogo, removeLogo } from "./actions";
 
 interface Platform {
   id: string;
@@ -22,7 +22,8 @@ interface Platform {
 interface FormState {
   name: string;
   slug: string;
-  logo_url: string;
+  logo: string | null;
+  logoUrl: string;
   description: string;
   affiliate_url: string;
   bonus_text: string;
@@ -39,13 +40,17 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [platformToDelete, setPlatformToDelete] = useState<Platform | null>(null);
+  const [editingPlatform, setEditingPlatform] = useState<Platform | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [editorError, setEditorError] = useState<string | null>(null);
+  const [editorSuccess, setEditorSuccess] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteSuccess, setDeleteSuccess] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormState>({
     name: "",
     slug: "",
-    logo_url: "",
+    logo: null,
+    logoUrl: "",
     description: "",
     affiliate_url: "",
     bonus_text: "",
@@ -81,13 +86,18 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setSuccess(null);
 
     const fd = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === "boolean") {
-        fd.append(key, value ? "on" : "");
-      } else {
-        fd.append(key, value);
-      }
-    });
+    // Envia os campos esperados pelo createPlatform
+    fd.append("name", formData.name);
+    fd.append("slug", formData.slug);
+    // Usa a URL fornecida manualmente se houver, senão usa o logo fazido upload
+    fd.append("logo_url", formData.logoUrl ?? (formData.logo ?? ""));
+    fd.append("description", formData.description);
+    fd.append("affiliate_url", formData.affiliate_url);
+    fd.append("bonus_text", formData.bonus_text);
+    fd.append("rating", formData.rating);
+    fd.append("is_featured", formData.is_featured ? "on" : "");
+    fd.append("is_active", formData.is_active ? "on" : "");
+    fd.append("position", formData.position);
 
     const result = await createPlatform(fd);
 
@@ -98,7 +108,8 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
       setFormData({
         name: "",
         slug: "",
-        logo_url: "",
+        logo: null,
+        logoUrl: "",
         description: "",
         affiliate_url: "",
         bonus_text: "",
@@ -121,7 +132,8 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setFormData({
       name: "",
       slug: "",
-      logo_url: "",
+      logo: null,
+      logoUrl: "",
       description: "",
       affiliate_url: "",
       bonus_text: "",
@@ -147,6 +159,25 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setDeleteSuccess(null);
   };
 
+  const handleEditClick = (platform: Platform) => {
+    setEditingPlatform(platform);
+    setEditorError(null);
+    setEditorSuccess(null);
+    setFormData({
+      name: platform.name,
+      slug: platform.slug,
+      logo: null,
+      logoUrl: platform.logo_url || "",
+      description: platform.description || "",
+      affiliate_url: platform.affiliate_url,
+      bonus_text: platform.bonus_text || "",
+      rating: platform.rating?.toString() || "",
+      is_featured: platform.is_featured,
+      is_active: platform.is_active,
+      position: platform.position.toString(),
+    });
+  };
+
   const handleConfirmDelete = async () => {
     if (!platformToDelete) return;
 
@@ -166,49 +197,101 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setDeleting(false);
   };
 
+  const handleConfirmEdit = async () => {
+    if (!editingPlatform) return;
+
+    setEditorError(null);
+
+    const fd = new FormData();
+    fd.append("name", formData.name);
+    fd.append("slug", formData.slug);
+    fd.append("logo_url", formData.logoUrl ?? (formData.logo ?? ""));
+    fd.append("description", formData.description);
+    fd.append("affiliate_url", formData.affiliate_url);
+    fd.append("bonus_text", formData.bonus_text);
+    fd.append("rating", formData.rating);
+    fd.append("is_featured", formData.is_featured ? "on" : "");
+    fd.append("is_active", formData.is_active ? "on" : "");
+    fd.append("position", formData.position);
+
+    const result = await updatePlatform(editingPlatform.id, fd);
+
+    if (result.error) {
+      setEditorError(result.error);
+    } else {
+      setEditorSuccess(`Plataforma "${editingPlatform.name}" atualizada com sucesso!`);
+      setEditingPlatform(null);
+      const fresh = await listPlatforms();
+      setPlatforms(fresh as Platform[]);
+    }
+    setLoading(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPlatform(null);
+    setEditorError(null);
+    setEditorSuccess(null);
+    setFormData({
+      name: "",
+      slug: "",
+      logo: null,
+      logoUrl: "",
+      description: "",
+      affiliate_url: "",
+      bonus_text: "",
+      rating: "",
+      is_featured: false,
+      is_active: true,
+      position: "0",
+    });
+  };
+
   const handleCancelDelete = () => {
     setPlatformToDelete(null);
     setDeleteError(null);
   };
 
   return (
-    <section className="w-full max-w-4xl space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">Plataformas</h2>
+    <section className="space-y-6">
+      <div className="admin-section-header">
+        <h2 className="admin-section-title">Plataformas</h2>
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="h-10 px-4 rounded-lg bg-zinc-900 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="admin-btn-primary"
         >
-          + Adicionar plataforma
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Adicionar plataforma
         </button>
       </div>
 
       {deleteSuccess && (
-        <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-300" role="status">
+        <div className="admin-alert admin-alert-success" role="status">
           {deleteSuccess}
         </div>
       )}
 
       {deleteError && (
-        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300" role="alert">
+        <div className="admin-alert admin-alert-error" role="alert">
           {deleteError}
         </div>
       )}
 
       {platformToDelete && (
-        <div className="rounded-xl border border-red-200 bg-white p-6 shadow-sm dark:border-red-800 dark:bg-zinc-900">
-          <h3 className="text-lg font-medium text-red-900 dark:text-red-100">Confirmar exclusão</h3>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="admin-card p-6 border-admin-error-border">
+          <h3 className="text-lg font-medium text-admin-error mb-2">Confirmar exclusão</h3>
+          <p className="text-sm text-admin-text-muted mb-4">
             Tem certeza que deseja excluir a plataforma <strong>{platformToDelete.name}</strong> (slug: {platformToDelete.slug})?
             Esta ação não pode ser desfeita.
           </p>
-          <div className="mt-4 flex justify-end gap-3">
+          <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={handleCancelDelete}
               disabled={deleting}
-              className="h-10 px-4 rounded-lg border border-zinc-300 bg-white text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+              className="admin-btn-secondary"
             >
               Cancelar
             </button>
@@ -216,7 +299,7 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
               type="button"
               onClick={handleConfirmDelete}
               disabled={deleting}
-              className="h-10 px-4 rounded-lg bg-red-600 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-700 dark:hover:bg-red-800"
+              className="admin-btn-danger"
             >
               {deleting ? "Excluindo..." : "Confirmar exclusão"}
             </button>
@@ -224,24 +307,52 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
         </div>
       )}
 
+      {editingPlatform && (
+        <div className="admin-card p-6 border-admin-warning-border">
+          <h3 className="text-lg font-medium text-admin-warning mb-2">Confirmar edição</h3>
+          <p className="text-sm text-admin-text-muted mb-4">
+            Tem certeza que deseja editar a plataforma <strong>{editingPlatform.name}</strong> (slug: {editingPlatform.slug})?
+            Esta ação não pode ser desfeita.
+          </p>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              disabled={!!editorError}
+              className="admin-btn-secondary"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmEdit}
+              disabled={!!editorError}
+              className="admin-btn-primary"
+            >
+              {editingPlatform.name}
+            </button>
+          </div>
+        </div>
+      )}
+
       {showForm && (
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h3 className="mb-4 text-lg font-medium text-zinc-900 dark:text-zinc-50">Nova plataforma</h3>
+        <div className="admin-card p-6">
+          <h3 className="text-lg font-semibold text-admin-text mb-4">Nova plataforma</h3>
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300" role="alert">
+            <div className="admin-alert admin-alert-error mb-4" role="alert">
               {error}
             </div>
           )}
           {success && (
-            <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-300" role="status">
+            <div className="admin-alert admin-alert-success mb-4" role="status">
               {success}
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Nome <span className="text-red-500">*</span>
+              <div className="admin-form-group">
+                <label htmlFor="name" className="admin-label">
+                  Nome <span className="text-admin-error">*</span>
                 </label>
                 <input
                   type="text"
@@ -250,13 +361,13 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
                   value={formData.name}
                   onChange={handleNameChange}
                   required
-                  className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                  className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                   placeholder="Ex: Super Slots"
                 />
               </div>
-              <div>
-                <label htmlFor="slug" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Slug <span className="text-red-500">*</span>
+              <div className="admin-form-group">
+                <label htmlFor="slug" className="admin-label">
+                  Slug <span className="text-admin-error">*</span>
                 </label>
                 <input
                   type="text"
@@ -265,46 +376,114 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
                   value={formData.slug}
                   onChange={handleChange}
                   required
-                  className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                  className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                   placeholder="super-slots"
                 />
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Gerado automaticamente a partir do nome. Pode ser editado.</p>
+                <p className="mt-1 text-xs text-admin-text-muted">Gerado automaticamente a partir do nome. Pode ser editado.</p>
               </div>
             </div>
 
-            <div>
-              <label htmlFor="logo_url" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                URL do Logo (opcional)
-              </label>
-              <input
-                type="url"
-                id="logo_url"
-                name="logo_url"
-                value={formData.logo_url}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
-                placeholder="https://exemplo.com/logo.png"
-              />
-            </div>
+<div className="admin-form-group">
+                <label htmlFor="description" className="admin-label">Descrição (opcional)</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={3}
+                  className="admin-input w-full px-3 py-2 text-sm placeholder-admin-text-muted resize-y"
+                  placeholder="Descrição curta da plataforma..."
+                />
+              </div>
 
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Descrição (opcional)
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={3}
-                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
-                placeholder="Descrição curta da plataforma..."
-              />
-            </div>
+              <div className="admin-form-group">
+                <label htmlFor="logo-url" className="admin-label">URL do Logo (opcional)</label>
+                <input
+                  type="text"
+                  id="logo-url"
+                  value={formData.logoUrl || ""}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, logoUrl: e.target.value }))}
+                  placeholder="https://exemplo.com/logo.png"
+                  className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
+                />
+                <p className="mt-1 text-xs text-admin-text-muted">Deixe em branco para fazer upload de arquivo. URLs PNG, JPG, JPEG ou WebP · Máx. 2MB</p>
+              </div>
 
-            <div>
-              <label htmlFor="affiliate_url" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                URL de Afiliado <span className="text-red-500">*</span>
+              <div className="admin-form-group">
+                <div id="logo-upload-area">
+                  {formData.logo ? (
+                    <div className="admin-card p-4 mb-3">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={formData.logo}
+                          alt="Logo da plataforma"
+                          className="w-16 h-16 rounded-lg object-cover"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-admin-text">
+                            {formData.logo.split("/").pop()}
+                          </p>
+                          <p className="text-xs text-admin-text-muted">
+                            Clique para substituir ou remover
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, logo: null }))}
+                          className="admin-btn-danger px-3 py-1 text-sm"
+                        >
+                          Remover
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className="admin-card p-4 mb-3 border border-admin-border cursor-pointer"
+                      onClick={() => document.getElementById("logo-input")?.click()}
+                    >
+                      <div className="flex items-center justify-center h-24 rounded-lg bg-admin-input-bg">
+                        <svg
+                          className="w-8 h-8 text-admin-text-muted"
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                        <p className="mt-2 text-admin-text-muted">Adicionar logo</p>
+                        <p className="text-xs text-admin-text-muted">PNG, JPG, JPEG ou WebP · Máx. 2MB</p>
+                      </div>
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.webp"
+                        id="logo-input"
+                        style={{ display: "none" }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const formDataTemp = new FormData();
+                            formDataTemp.append("logo", file);
+                            uploadLogo(formDataTemp).then((result) => {
+                              if (result.success) {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  logo: result.url || null,
+                                }));
+                                setSuccess("Logo enviado com sucesso!");
+                              } else {
+                                setError(result.error || "Erro ao fazer upload");
+                              }
+                            });
+                            e.target.value = "";
+                          }
+                        }}
+                        />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label htmlFor="affiliate_url" className="admin-label">
+                URL de Afiliado <span className="text-admin-error">*</span>
               </label>
               <input
                 type="url"
@@ -313,32 +492,28 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
                 value={formData.affiliate_url}
                 onChange={handleChange}
                 required
-                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                 placeholder="https://parceiro.com/tracking?id=123"
               />
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Apenas URLs HTTP/HTTPS válidas. Será validada no servidor.</p>
+              <p className="mt-1 text-xs text-admin-text-muted">Apenas URLs HTTP/HTTPS válidas. Será validada no servidor.</p>
             </div>
 
-            <div>
-              <label htmlFor="bonus_text" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Texto do Bônus (opcional)
-              </label>
+            <div className="admin-form-group">
+              <label htmlFor="bonus_text" className="admin-label">Texto do Bônus (opcional)</label>
               <input
                 type="text"
                 id="bonus_text"
                 name="bonus_text"
                 value={formData.bonus_text}
                 onChange={handleChange}
-                className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                 placeholder="Ex: 100% até R$ 500 + 50 giros grátis"
               />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <label htmlFor="rating" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Avaliação (0-5, opcional)
-                </label>
+              <div className="admin-form-group">
+                <label htmlFor="rating" className="admin-label">Avaliação (0-5, opcional)</label>
                 <input
                   type="number"
                   id="rating"
@@ -348,38 +523,36 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
                   step="0.1"
                   min="0"
                   max="5"
-                  className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                  className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                   placeholder="4.5"
                 />
               </div>
-              <div className="flex items-end">
+              <div className="admin-form-group">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     name="is_featured"
                     checked={formData.is_featured}
                     onChange={handleChange}
-                    className="h-4 w-4 rounded border-zinc-300 text-zinc-600 focus:ring-zinc-500 dark:border-zinc-600"
+                    className="h-4 w-4 rounded border-admin-border text-admin-accent focus:ring-admin-accent"
                   />
-                  <span className="text-sm text-zinc-700 dark:text-zinc-300">Destaque</span>
+                  <span className="text-sm text-admin-text">Destaque</span>
                 </label>
               </div>
-              <div className="flex items-end">
+              <div className="admin-form-group">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     name="is_active"
                     checked={formData.is_active}
                     onChange={handleChange}
-                    className="h-4 w-4 rounded border-zinc-300 text-zinc-600 focus:ring-zinc-500 dark:border-zinc-600"
+                    className="h-4 w-4 rounded border-admin-border text-admin-accent focus:ring-admin-accent"
                   />
-                  <span className="text-sm text-zinc-700 dark:text-zinc-300">Ativo</span>
+                  <span className="text-sm text-admin-text">Ativo</span>
                 </label>
               </div>
-              <div>
-                <label htmlFor="position" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Posição
-                </label>
+              <div className="admin-form-group">
+                <label htmlFor="position" className="admin-label">Posição</label>
                 <input
                   type="number"
                   id="position"
@@ -387,99 +560,104 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
                   value={formData.position}
                   onChange={handleChange}
                   min="0"
-                  className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+                  className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
                   placeholder="0"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="flex justify-end gap-3 pt-4 border-t admin-border">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="h-10 px-4 rounded-lg border border-zinc-300 bg-white text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="admin-btn-secondary"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="h-10 px-4 rounded-lg bg-zinc-900 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                className="admin-btn-primary"
               >
-                {loading ? "Salvando..." : "Salvar"}
+                {loading ? (
+                  <>
+                    <svg className="admin-spinner mr-2" aria-hidden="true" />
+                    Salvando...
+                  </>
+                ) : (
+                  "Salvar"
+                )}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="admin-table-container">
         {platforms.length === 0 ? (
-          <div className="py-12 px-6 text-center">
-            <p className="text-zinc-600 dark:text-zinc-400">Nenhuma plataforma cadastrada.</p>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">Clique em &quot;Adicionar plataforma&quot; para criar a primeira.</p>
+          <div className="p-12 text-center">
+            <svg className="w-12 h-12 mx-auto text-admin-border mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <p className="text-admin-text-muted mb-1">Nenhuma plataforma cadastrada.</p>
+            <p className="text-sm text-admin-text-muted">Clique em "Adicionar plataforma" para criar a primeira.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Nome</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Destaque</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Avaliação</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Posição</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider dark:text-zinc-400">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                {platforms.map((platform) => (
-                  <tr key={platform.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-zinc-900 dark:text-zinc-100">{platform.name}</div>
-                      <div className="text-xs text-zinc-500 dark:text-zinc-400">Slug: {platform.slug}</div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          platform.is_active
-                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                        }`}
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Status</th>
+                <th>Destaque</th>
+                <th>Avaliação</th>
+                <th>Posição</th>
+                <th style={{ width: "100px" }}>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {platforms.map((platform) => (
+                <tr key={platform.id}>
+                  <td>
+                    <div className="font-medium text-admin-text">{platform.name}</div>
+                    <div className="text-xs text-admin-text-muted">Slug: {platform.slug}</div>
+                  </td>
+                  <td>
+                    <span className={`admin-badge ${platform.is_active ? "admin-badge-success" : "admin-badge-error"}`}>
+                      {platform.is_active ? "Ativo" : "Inativo"}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`admin-badge ${platform.is_featured ? "admin-badge-warning" : "admin-badge-neutral"}`}>
+                      {platform.is_featured ? "Sim" : "Não"}
+                    </span>
+                  </td>
+                  <td className="text-admin-text">
+                    {platform.rating !== null ? platform.rating.toFixed(1) : "—"}
+                  </td>
+                  <td className="text-admin-text">{platform.position}</td>
+                  <td>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleEditClick(platform)}
+                        className="text-sm font-medium text-admin-accent hover:text-admin-primary transition-colors"
                       >
-                        {platform.is_active ? "Ativo" : "Inativo"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          platform.is_featured
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-                            : "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400"
-                        }`}
-                      >
-                        {platform.is_featured ? "Sim" : "Não"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">
-                      {platform.rating !== null ? platform.rating.toFixed(1) : "\u2014"}
-                    </td>
-                    <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">{platform.position}</td>
-                    <td className="px-4 py-3">
+                        Editar
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteClick(platform)}
                         disabled={deleting || platformToDelete !== null}
-                        className="text-sm font-medium text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="text-sm font-medium text-admin-error hover:text-admin-danger transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Excluir
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </section>
