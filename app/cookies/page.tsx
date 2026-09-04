@@ -231,7 +231,7 @@ export default function CookiesPage() {
                 <ul className="text-text-secondary leading-relaxed space-y-2 ml-6 list-disc">
                   <li>Limpando cookies do site nas configurações do navegador;</li>
                   <li>Usando o botão "Gerenciar Cookies" no rodapé (se implementado);</li>
-                  <li>Enviando e-mail para <a href="mailto:contato@slotgold.com" className="text-gold-primary hover:underline">contato@slotgold.com</a>.</li>
+                  <li>Enviando e-mail para <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>.</li>
                 </ul>
                 <p className="text-text-secondary leading-relaxed mt-3">
                   A retirada não afeta a legalidade do tratamento realizado antes dela.
@@ -255,7 +255,7 @@ export default function CookiesPage() {
               <section>
                 <h2 className="text-xl font-semibold text-white mb-3">9. Contato</h2>
                 <p className="text-text-secondary leading-relaxed">
-                  Dúvidas sobre cookies: <a href="mailto:contato@slotgold.com" className="text-gold-primary hover:underline">contato@slotgold.com</a>
+                  Dúvidas sobre cookies: <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>
                 </p>
               </section>
             </div>
@@ -294,10 +294,10 @@ export default function CookiesPage() {
             <div>
               <h4 className="font-semibold text-white mb-4">Jogo Responsável</h4>
               <ul className="space-y-2 text-sm text-text-secondary">
-                <li><a href="https://www.jogadoresanonimos.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
-                <li><a href="https://www.cvl.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
-                <li><a href="https://www.jogadoresanonimos.org.br/ferramentas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
-                <li><a href="https://www.ibeja.org.br/autoexclusao" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
+                <li><a href="https://www.jogadoresanonimos.com.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
+                <li><a href="https://cvv.org.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
+                <li><a href="https://www.gov.br/fazenda/pt-br/assuntos/jogo-responsavel" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
+                <li><a href="https://www.gov.br/pt-br/servicos/plataforma-centralizada-de-autoexclusao-apostas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
               </ul>
             </div>
 

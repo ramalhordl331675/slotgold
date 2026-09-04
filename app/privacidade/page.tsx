@@ -68,7 +68,7 @@ export default function PrivacidadePage() {
               <section>
                 <h2 className="text-xl font-semibold text-white mb-3">1. Controlador de Dados</h2>
                 <p className="text-text-secondary leading-relaxed">
-                  O SlotGold ("nós", "nosso", "nos") é o controlador dos dados pessoais coletados através deste site. Para exercer seus direitos ou tirar dúvidas, contate: <a href="mailto:contato@slotgold.com" className="text-gold-primary hover:underline">contato@slotgold.com</a>
+                  O SlotGold ("nós", "nosso", "nos") é o controlador dos dados pessoais coletados através deste site. Para exercer seus direitos ou tirar dúvidas, contate: <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>
                 </p>
               </section>
 
@@ -149,7 +149,7 @@ export default function PrivacidadePage() {
                   <li>Revogação do consentimento.</li>
                 </ul>
                 <p className="text-text-secondary leading-relaxed mt-3">
-                  Para exercer seus direitos: <a href="mailto:contato@slotgold.com" className="text-gold-primary hover:underline">contato@slotgold.com</a>. Responderemos em até 15 dias (Art. 19, LGPD).
+                  Para exercer seus direitos: <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>. Responderemos em até 15 dias (Art. 19, LGPD).
                 </p>
               </section>
 
@@ -177,7 +177,7 @@ export default function PrivacidadePage() {
               <section>
                 <h2 className="text-xl font-semibold text-white mb-3">12. Contato do Encarregado (DPO)</h2>
                 <p className="text-text-secondary leading-relaxed">
-                  Nosso Encarregado de Proteção de Dados pode ser contatado em: <a href="mailto:dpo@slotgold.com" className="text-gold-primary hover:underline">dpo@slotgold.com</a> (endereço configurável — substitua pelo e-mail oficial do projeto).
+                  Nosso Encarregado de Proteção de Dados pode ser contatado em: <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>
                 </p>
               </section>
             </div>
@@ -216,10 +216,10 @@ export default function PrivacidadePage() {
             <div>
               <h4 className="font-semibold text-white mb-4">Jogo Responsável</h4>
               <ul className="space-y-2 text-sm text-text-secondary">
-                <li><a href="https://www.jogadoresanonimos.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
-                <li><a href="https://www.cvl.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
-                <li><a href="https://www.jogadoresanonimos.org.br/ferramentas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
-                <li><a href="https://www.ibeja.org.br/autoexclusao" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
+                <li><a href="https://www.jogadoresanonimos.com.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
+                <li><a href="https://cvv.org.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
+                <li><a href="https://www.gov.br/fazenda/pt-br/assuntos/jogo-responsavel" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
+                <li><a href="https://www.gov.br/pt-br/servicos/plataforma-centralizada-de-autoexclusao-apostas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
               </ul>
             </div>
 

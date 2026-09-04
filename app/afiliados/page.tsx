@@ -197,7 +197,7 @@ export default function AfiliadosPage() {
                   <li>Compare nossas notas com fóruns independentes (Reclame Aqui, Reddit r/gambling, Trustpilot);</li>
                   <li>Teste as plataformas você mesmo (muitas têm modo demo grátis);</li>
                   <li>Leia nossos <Link href="/termos" className="text-gold-primary hover:underline">Termos de Uso</Link> e <Link href="/privacidade" className="text-gold-primary hover:underline">Política de Privacidade</Link>;</li>
-                  <li>Conteste-nos: se encontrar inconsistência, reporte em <a href="mailto:contato@slotgold.com" className="text-gold-primary hover:underline">contato@slotgold.com</a>.</li>
+                  <li>Conteste-nos: se encontrar inconsistência, reporte em <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>.</li>
                 </ul>
               </section>
 
@@ -211,7 +211,7 @@ export default function AfiliadosPage() {
               <section>
                 <h2 className="text-xl font-semibold text-white mb-3">12. Contato</h2>
                 <p className="text-text-secondary leading-relaxed">
-                  Dúvidas sobre nossa política de afiliados: <a href="mailto:afiliados@slotgold.com" className="text-gold-primary hover:underline">afiliados@slotgold.com</a> (endereço configurável — substitua pelo e-mail oficial do projeto).
+                  Dúvidas sobre nossa política de afiliados: <a href="mailto:claudioramalho1234@gmail.com" className="text-gold-primary hover:underline">claudioramalho1234@gmail.com</a>
                 </p>
               </section>
             </div>
@@ -250,10 +250,10 @@ export default function AfiliadosPage() {
             <div>
               <h4 className="font-semibold text-white mb-4">Jogo Responsável</h4>
               <ul className="space-y-2 text-sm text-text-secondary">
-                <li><a href="https://www.jogadoresanonimos.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
-                <li><a href="https://www.cvl.org.br" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
-                <li><a href="https://www.jogadoresanonimos.org.br/ferramentas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
-                <li><a href="https://www.ibeja.org.br/autoexclusao" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
+                <li><a href="https://www.jogadoresanonimos.com.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Jogadores Anônimos Brasil</a></li>
+                <li><a href="https://cvv.org.br/" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Centro de Valorização da Vida (188)</a></li>
+                <li><a href="https://www.gov.br/fazenda/pt-br/assuntos/jogo-responsavel" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Limites de depósito</a></li>
+                <li><a href="https://www.gov.br/pt-br/servicos/plataforma-centralizada-de-autoexclusao-apostas" target="_blank" rel="noopener noreferrer" className="hover:text-gold-primary transition-colors">Autoexclusão</a></li>
               </ul>
             </div>
 

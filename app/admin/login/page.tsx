@@ -33,54 +33,64 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6">
-      <div className="w-full max-w-sm rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Acesso administrativo
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Entre com suas credenciais de administrador.
-        </p>
+    <main className="flex min-h-screen items-center justify-center px-6 admin-bg">
+      <div className="w-full max-w-sm admin-card p-8">
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-admin-accent flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-lg">SG</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-admin-text">Acesso administrativo</h1>
+          <p className="mt-1 text-sm text-admin-text-muted">Entre com suas credenciais de administrador.</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            E-mail
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="admin-form-group">
+            <label htmlFor="email" className="admin-label">E-mail</label>
             <input
               type="email"
+              id="email"
               required
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-10 rounded-lg border border-zinc-300 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+              className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
               placeholder="admin@exemplo.com"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Senha
+          <div className="admin-form-group">
+            <label htmlFor="password" className="admin-label">Senha</label>
             <input
               type="password"
+              id="password"
               required
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-10 rounded-lg border border-zinc-300 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+              className="admin-input w-full h-10 px-3 text-sm placeholder-admin-text-muted"
               placeholder="••••••••"
             />
-          </label>
+          </div>
 
           {error && (
-            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+            <div className="admin-alert admin-alert-error" role="alert">
               {error}
-            </p>
+            </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="h-10 rounded-lg bg-amber-500 px-4 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="admin-btn-primary w-full h-10"
           >
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? (
+              <>
+                <svg className="admin-spinner mr-2" aria-hidden="true" />
+                Entrando...
+              </>
+            ) : (
+              "Entrar"
+            )}
           </button>
         </form>
       </div>
