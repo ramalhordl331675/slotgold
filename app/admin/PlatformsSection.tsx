@@ -42,8 +42,6 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
   const [platformToDelete, setPlatformToDelete] = useState<Platform | null>(null);
   const [editingPlatform, setEditingPlatform] = useState<Platform | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const [editorError, setEditorError] = useState<string | null>(null);
-  const [editorSuccess, setEditorSuccess] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteSuccess, setDeleteSuccess] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormState>({
@@ -86,10 +84,8 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setSuccess(null);
 
     const fd = new FormData();
-    // Envia os campos esperados pelo createPlatform
     fd.append("name", formData.name);
     fd.append("slug", formData.slug);
-    // Usa a URL fornecida manualmente se houver, senão usa o logo fazido upload
     fd.append("logo_url", formData.logoUrl ?? (formData.logo ?? ""));
     fd.append("description", formData.description);
     fd.append("affiliate_url", formData.affiliate_url);
@@ -99,12 +95,16 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     fd.append("is_active", formData.is_active ? "on" : "");
     fd.append("position", formData.position);
 
-    const result = await createPlatform(fd);
+    const result = editingPlatform
+      ? await updatePlatform(editingPlatform.id, fd)
+      : await createPlatform(fd);
 
     if (result.error) {
       setError(result.error);
     } else {
-      setSuccess("Plataforma cadastrada com sucesso!");
+      setSuccess(editingPlatform
+        ? `Plataforma "${editingPlatform.name}" atualizada com sucesso!`
+        : "Plataforma cadastrada com sucesso!");
       setFormData({
         name: "",
         slug: "",
@@ -119,6 +119,7 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
         position: "0",
       });
       setShowForm(false);
+      setEditingPlatform(null);
       const fresh = await listPlatforms();
       setPlatforms(fresh as Platform[]);
     }
@@ -127,6 +128,7 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
 
   const handleCancel = () => {
     setShowForm(false);
+    setEditingPlatform(null);
     setError(null);
     setSuccess(null);
     setFormData({
@@ -161,8 +163,9 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
 
   const handleEditClick = (platform: Platform) => {
     setEditingPlatform(platform);
-    setEditorError(null);
-    setEditorSuccess(null);
+    setShowForm(true);
+    setError(null);
+    setSuccess(null);
     setFormData({
       name: platform.name,
       slug: platform.slug,
@@ -197,55 +200,6 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
     setDeleting(false);
   };
 
-  const handleConfirmEdit = async () => {
-    if (!editingPlatform) return;
-
-    setEditorError(null);
-
-    const fd = new FormData();
-    fd.append("name", formData.name);
-    fd.append("slug", formData.slug);
-    fd.append("logo_url", formData.logoUrl ?? (formData.logo ?? ""));
-    fd.append("description", formData.description);
-    fd.append("affiliate_url", formData.affiliate_url);
-    fd.append("bonus_text", formData.bonus_text);
-    fd.append("rating", formData.rating);
-    fd.append("is_featured", formData.is_featured ? "on" : "");
-    fd.append("is_active", formData.is_active ? "on" : "");
-    fd.append("position", formData.position);
-
-    const result = await updatePlatform(editingPlatform.id, fd);
-
-    if (result.error) {
-      setEditorError(result.error);
-    } else {
-      setEditorSuccess(`Plataforma "${editingPlatform.name}" atualizada com sucesso!`);
-      setEditingPlatform(null);
-      const fresh = await listPlatforms();
-      setPlatforms(fresh as Platform[]);
-    }
-    setLoading(false);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingPlatform(null);
-    setEditorError(null);
-    setEditorSuccess(null);
-    setFormData({
-      name: "",
-      slug: "",
-      logo: null,
-      logoUrl: "",
-      description: "",
-      affiliate_url: "",
-      bonus_text: "",
-      rating: "",
-      is_featured: false,
-      is_active: true,
-      position: "0",
-    });
-  };
-
   const handleCancelDelete = () => {
     setPlatformToDelete(null);
     setDeleteError(null);
@@ -257,7 +211,7 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
         <h2 className="admin-section-title">Plataformas</h2>
         <button
           type="button"
-          onClick={() => setShowForm(true)}
+          onClick={() => { setShowForm(true); setEditingPlatform(null); setError(null); setSuccess(null); }}
           className="admin-btn-primary"
         >
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -307,37 +261,9 @@ export default function PlatformsSection({ initialPlatforms }: { initialPlatform
         </div>
       )}
 
-      {editingPlatform && (
-        <div className="admin-card p-6 border-admin-warning-border">
-          <h3 className="text-lg font-medium text-admin-warning mb-2">Confirmar edição</h3>
-          <p className="text-sm text-admin-text-muted mb-4">
-            Tem certeza que deseja editar a plataforma <strong>{editingPlatform.name}</strong> (slug: {editingPlatform.slug})?
-            Esta ação não pode ser desfeita.
-          </p>
-          <div className="flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              disabled={!!editorError}
-              className="admin-btn-secondary"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              onClick={handleConfirmEdit}
-              disabled={!!editorError}
-              className="admin-btn-primary"
-            >
-              {editingPlatform.name}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {showForm && (
+      {(showForm || editingPlatform) && (
         <div className="admin-card p-6">
-          <h3 className="text-lg font-semibold text-admin-text mb-4">Nova plataforma</h3>
+          <h3 className="text-lg font-semibold text-admin-text mb-4">{editingPlatform ? "Editar plataforma" : "Nova plataforma"}</h3>
           {error && (
             <div className="admin-alert admin-alert-error mb-4" role="alert">
               {error}

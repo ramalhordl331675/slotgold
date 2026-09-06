@@ -85,7 +85,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen flex bg-gray-900">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out sidebar ${sidebarCollapsed ? "w-16" : "w-64"} lg:relative lg:translate-x-0`}
+        className={`fixed inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out sidebar ${sidebarCollapsed ? "w-16" : "w-52"} lg:relative lg:translate-x-0`}
         aria-label="Sidebar navigation"
       >
         <div className="flex h-14 items-center justify-between px-4 border-b border-gray-700">
@@ -100,8 +100,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <button
             type="button"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-1.5 rounded-lg hover:bg-gray-700 transition-colors text-gray-400 lg:hidden"
-            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="p-1.5 rounded-lg hover:bg-gray-700 transition-colors text-gray-400"
+            aria-label={sidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"}
             aria-expanded={!sidebarCollapsed}
           >
             {sidebarCollapsed ? <ChevronLeftIcon className="w-4 h-4" /> : <MenuIcon className="w-4 h-4" />}
@@ -115,6 +115,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <Link
                 key={item.name}
                 href={item.href}
+                title={item.name}
                 className={`sidebar-link ${isActive ? "active" : ""} ${sidebarCollapsed ? "justify-center px-2" : ""}`}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -131,14 +132,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             await logout();
             // O logout já redireciona para /admin/login internamente
           }}>
-            <button type="submit" className="sidebar-link hover:bg-gray-700 hover:text-red-500 justify-center px-1.5">
-              <LogoutIcon className="w-4 h-4 flex-shrink-0" /> Sair
+            <button type="submit" title="Sair" className="sidebar-link hover:bg-gray-700 hover:text-red-500 justify-center px-1.5">
+              <LogoutIcon className="w-4 h-4 flex-shrink-0" /> {!sidebarCollapsed && "Sair"}
             </button>
           </form>
         </div>
       </aside>
 
-      <div className={`flex-1 flex flex-col min-w-0 ${sidebarCollapsed ? "lg:ml-12" : "lg:ml-60"}`}>
+      <div className={`flex-1 flex flex-col min-w-0 ${sidebarCollapsed ? "lg:ml-12" : "lg:ml-48"}`}>
         <header className="sticky top-0 z-30 header">
           <div className="flex h-12 items-center justify-between px-4">
             <div className="flex items-center gap-3">
