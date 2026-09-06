@@ -46,9 +46,7 @@ export default function PlatformSlider({ platforms, className = "" }: PlatformSl
 
   useEffect(() => {
     const updateCardsPerView = () => {
-      // Mede o container do slider (não a janela) para funcionar também
-      // dentro da moldura 9:16, onde a janela é larga mas o conteúdo é estreito.
-      const width = sliderRef.current?.clientWidth ?? window.innerWidth;
+      const width = window.innerWidth;
       if (width < 640) setCardsPerView(1);
       else if (width < 1024) setCardsPerView(2);
       else setCardsPerView(3);

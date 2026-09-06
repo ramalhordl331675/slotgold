@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PhoneFrame from "@/components/PhoneFrame";
 
 export const metadata: Metadata = {
   title: "Política de Cookies - SlotGold",
@@ -18,7 +17,7 @@ export default function CookiesPage() {
   const lastUpdated = "1 de Setembro de 2026";
 
   return (
-    <PhoneFrame>
+    <>
       <header className="border-b border-border-subtle bg-bg-secondary/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container-page">
           <div className="flex h-16 items-center justify-between gap-4">
@@ -336,6 +335,6 @@ export default function CookiesPage() {
           </div>
         </div>
       </footer>
-    </PhoneFrame>
+    </>
   );
 }
