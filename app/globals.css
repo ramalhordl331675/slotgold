@@ -3751,3 +3751,172 @@ body {
     margin-top: 0.25rem;
   }
 }
+
+/* ========================================
+   PHONE FRAME 9:16 (site público em retrato)
+   Coluna central estreita estilo tela de
+   celular em telas >= 768px; 100% abaixo.
+   O frame é um CSS container: ajustes
+   internos usam unidades cqw (proporção).
+   ======================================== */
+
+.phone-frame-page {
+  min-height: 100dvh;
+  background: #050505;
+  display: flex;
+  justify-content: center;
+}
+
+.phone-frame {
+  container-type: inline-size;
+  width: 100%;
+  min-height: 100dvh;
+  margin-inline: auto;
+  background: var(--bg-primary);
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  .phone-frame-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .phone-frame {
+    width: min(100%, calc((100vh - 3rem) * 9 / 16));
+    width: min(100%, calc((100dvh - 3rem) * 9 / 16));
+    min-height: calc(100dvh - 3rem);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1.5rem;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.55),
+      0 0 40px rgba(212, 175, 55, 0.05);
+  }
+
+  /* Header (home): força variante mobile dentro da moldura estreita */
+  .phone-frame .header-nav {
+    display: none !important;
+  }
+
+  .phone-frame .mobile-menu-btn {
+    display: inline-flex !important;
+  }
+
+  .phone-frame #mobile-menu {
+    display: block !important;
+  }
+
+  /* Headers das páginas institucionais: esconde nav auxiliar (links âncora) */
+  .phone-frame header nav.md\:flex {
+    display: none !important;
+  }
+
+  /* Hero: coluna única centralizada, sem visual lateral */
+  .phone-frame .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .phone-frame .hero-inner {
+    text-align: center;
+  }
+
+  .phone-frame .hero-visual {
+    display: none;
+  }
+
+  .phone-frame .hero-cta-group {
+    justify-content: center;
+  }
+
+  .phone-frame .hero-stats {
+    justify-content: center;
+  }
+
+  .phone-frame .hero-subtitle {
+    margin-inline: auto;
+  }
+
+  /* Tipografia proporcional à largura da moldura (cqw) */
+  .phone-frame .hero-title {
+    font-size: clamp(2rem, 9cqw, 3rem);
+  }
+
+  .phone-frame .counter {
+    font-size: clamp(1.75rem, 7cqw, 2.25rem);
+  }
+
+  .phone-frame .how-it-works-step-number {
+    font-size: clamp(1.5rem, 7cqw, 2rem);
+  }
+
+  .phone-frame h1 {
+    font-size: clamp(1.75rem, 7.5cqw, 2.5rem);
+  }
+
+  .phone-frame h2 {
+    font-size: clamp(1.5rem, 6.5cqw, 2rem);
+  }
+
+  /* Grids multi-coluna viram coluna única */
+  .phone-frame .platform-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-frame .sobre-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .phone-frame .sobre-pillars,
+  .phone-frame .jr-principles,
+  .phone-frame .jr-help-grid,
+  .phone-frame .why-trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-frame .md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Fileiras (controles, CTA, passos, rodapé) empilham na vertical */
+  .phone-frame .platform-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .phone-frame .sort-wrapper,
+  .phone-frame .sort-select {
+    width: 100%;
+  }
+
+  .phone-frame .section-cta-inner {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .phone-frame .how-it-works-steps {
+    flex-direction: column;
+  }
+
+  .phone-frame .how-it-works-step-connector {
+    display: none;
+  }
+
+  .phone-frame footer .lg\:grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-frame footer .sm\:flex-row {
+    flex-direction: column;
+  }
+
+  /* Ritmo vertical proporcional (seções diretas do main) */
+  .phone-frame main > section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .phone-frame .section-cta-band {
+    padding: 2rem 0;
+  }
+}

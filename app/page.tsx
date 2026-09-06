@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/Header";
+import PhoneFrame from "@/components/PhoneFrame";
 import HeroPremium from "@/components/HeroPremium";
 import PlatformSlider from "@/components/PlatformSlider";
 import PlatformGrid from "@/components/PlatformGrid";
@@ -40,21 +41,23 @@ export default async function Home() {
 
   if (error) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-bg-primary px-6">
-        <div className="text-center max-w-md">
-          <h1 className="text-4xl font-bold tracking-tight text-white">SlotGold</h1>
-          <p className="mt-4 text-text-secondary">
-            Não foi possível carregar as plataformas no momento.
-          </p>
-        </div>
-      </main>
+      <PhoneFrame>
+        <main className="flex min-h-screen flex-col items-center justify-center bg-bg-primary px-6">
+          <div className="text-center max-w-md">
+            <h1 className="text-4xl font-bold tracking-tight text-white">SlotGold</h1>
+            <p className="mt-4 text-text-secondary">
+              Não foi possível carregar as plataformas no momento.
+            </p>
+          </div>
+        </main>
+      </PhoneFrame>
     );
   }
 
   const activePlatforms = (platforms as Platform[]) ?? [];
 
   return (
-    <>
+    <PhoneFrame>
       <Header />
       <main className="flex-1">
         <HeroPremium />
@@ -437,6 +440,6 @@ export default async function Home() {
           </div>
         </div>
       </footer>
-    </>
+    </PhoneFrame>
   );
 }
